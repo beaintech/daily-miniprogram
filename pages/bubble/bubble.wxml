@@ -1,0 +1,46 @@
+<view class="container">
+  <!-- 顶部状态栏 -->
+  <view class="status-bar">
+    <view class="stat">
+      <text class="stat-label">已戳破</text>
+      <text class="stat-value">{{poppedCount}}</text>
+    </view>
+    <view class="stat">
+      <text class="stat-label">剩余</text>
+      <text class="stat-value">{{remainingCount}}</text>
+    </view>
+    <view class="stat">
+      <text class="stat-label">最高分</text>
+      <text class="stat-value">{{highScore}}</text>
+    </view>
+  </view>
+
+  <!-- 泡泡网格 -->
+  <view class="bubble-grid">
+    <block wx:for="{{bubbles}}" wx:key="id">
+      <view
+        class="bubble {{item.popped ? 'popped' : ''}} {{item.color}}"
+        data-id="{{item.id}}"
+        bindtouchstart="onBubbleTap"
+      >
+        <view class="bubble-inner"></view>
+        <view class="pop-effect" wx:if="{{item.popping}}"></view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 完成弹窗 -->
+  <view class="modal-overlay" wx:if="{{showComplete}}">
+    <view class="modal">
+      <text class="modal-title">全部戳完！</text>
+      <text class="modal-score">共戳破 {{poppedCount}} 个泡泡</text>
+      <text class="modal-record" wx:if="{{isNewRecord}}">新纪录！</text>
+      <view class="modal-btn" bindtap="resetGame">
+        <text>再来一局</text>
+      </view>
+      <view class="modal-btn modal-btn-back" bindtap="goBack">
+        <text>返回首页</text>
+      </view>
+    </view>
+  </view>
+</view>

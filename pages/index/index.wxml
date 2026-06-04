@@ -1,0 +1,44 @@
+<view class="container">
+  <view class="header">
+    <text class="title">解压乐园</text>
+    <text class="subtitle">选一个开始解压吧</text>
+  </view>
+
+  <view class="game-list">
+    <!-- 戳泡泡纸 -->
+    <view class="game-card" bindtap="playBubble">
+      <view class="game-icon bubble-icon">
+        <view class="mini-bubble b1"></view>
+        <view class="mini-bubble b2"></view>
+        <view class="mini-bubble b3"></view>
+      </view>
+      <text class="game-name">戳泡泡纸</text>
+      <text class="game-desc">手指划过，满屏泡泡爆开</text>
+      <view class="game-tag">经典</view>
+    </view>
+
+    <!-- 超级按钮 -->
+    <view class="game-card coming-soon" bindtap="comingSoon">
+      <view class="game-icon btn-icon">
+        <view class="mini-btn"></view>
+      </view>
+      <text class="game-name">超级按钮</text>
+      <text class="game-desc">各种开关按钮，满足强迫症</text>
+      <view class="game-tag tag-soon">即将上线</view>
+    </view>
+
+    <!-- 切沙子 -->
+    <view class="game-card coming-soon" bindtap="comingSoon">
+      <view class="game-icon sand-icon">
+        <view class="sand-pile"></view>
+      </view>
+      <text class="game-name">切沙子</text>
+      <text class="game-desc">手指划过沙堆，看沙子落下</text>
+      <view class="game-tag tag-soon">即将上线</view>
+    </view>
+  </view>
+
+  <view class="footer">
+    <text class="footer-text">by beaintech | 每天 6:00 AI 自动开发</text>
+  </view>
+</view>
