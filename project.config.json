@@ -31,10 +31,13 @@
     "es6": false,
     "postcss": false,
     "compileWorklet": false,
-    "minified": false,
-    "uglifyFileName": false,
+    "minified": true,
+    "uglifyFileName": true,
     "uploadWithSourceMap": true,
     "enhance": false,
+    "lazyCodeLoading": {
+      "components": true
+    },
     "localPlugins": false,
     "condition": false,
     "swc": false,
