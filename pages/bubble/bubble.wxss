@@ -35,159 +35,122 @@
   color: #fff;
 }
 
+/* 可滚动区域 */
+.bubble-scroll {
+  flex: 1;
+  overflow: hidden;
+}
+
 .bubble-grid {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 12rpx;
-  padding: 10rpx 0;
-  flex: 1;
-  align-content: flex-start;
-  overflow-y: auto;
+  gap: 10rpx 12rpx;
+  padding: 10rpx 0 40rpx 0;
 }
 
+/* ===== 泡泡基础样式 ===== */
 .bubble {
-  width: 100rpx;
-  height: 100rpx;
+  width: 96rpx;
+  height: 96rpx;
   border-radius: 50%;
   position: relative;
-  cursor: pointer;
-  transition: transform 0.12s ease, opacity 0.12s ease;
+  transition: transform 0.12s ease, opacity 0.18s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
-.bubble-inner {
+.bubble-shine {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
-/* 泡泡颜色 */
-.bubble.red .bubble-inner {
-  background: radial-gradient(circle at 35% 35%, #ff8a9e, #e94560);
-  box-shadow: 0 4rpx 12rpx rgba(233,69,96,0.4), inset 0 -4rpx 8rpx rgba(0,0,0,0.2), inset 0 4rpx 8rpx rgba(255,255,255,0.3);
+/* 泡泡颜色 + 立体感 */
+.bubble.red .bubble-shine {
+  background: radial-gradient(circle at 30% 30%, #ff8a9e, #e94560);
+  box-shadow: 0 4rpx 14rpx rgba(233,69,96,0.45), inset 0 -4rpx 8rpx rgba(0,0,0,0.18), inset 0 4rpx 8rpx rgba(255,255,255,0.25);
+}
+.bubble.pink .bubble-shine {
+  background: radial-gradient(circle at 30% 30%, #f7c0d1, #d4537e);
+  box-shadow: 0 4rpx 14rpx rgba(212,83,126,0.45), inset 0 -4rpx 8rpx rgba(0,0,0,0.18), inset 0 4rpx 8rpx rgba(255,255,255,0.25);
+}
+.bubble.purple .bubble-shine {
+  background: radial-gradient(circle at 30% 30%, #cecbf6, #7f77dd);
+  box-shadow: 0 4rpx 14rpx rgba(127,119,221,0.45), inset 0 -4rpx 8rpx rgba(0,0,0,0.18), inset 0 4rpx 8rpx rgba(255,255,255,0.25);
+}
+.bubble.blue .bubble-shine {
+  background: radial-gradient(circle at 30% 30%, #b5d4f4, #378add);
+  box-shadow: 0 4rpx 14rpx rgba(55,138,221,0.45), inset 0 -4rpx 8rpx rgba(0,0,0,0.18), inset 0 4rpx 8rpx rgba(255,255,255,0.25);
+}
+.bubble.teal .bubble-shine {
+  background: radial-gradient(circle at 30% 30%, #9fe1cb, #1d9e75);
+  box-shadow: 0 4rpx 14rpx rgba(29,158,117,0.45), inset 0 -4rpx 8rpx rgba(0,0,0,0.18), inset 0 4rpx 8rpx rgba(255,255,255,0.25);
+}
+.bubble.green .bubble-shine {
+  background: radial-gradient(circle at 30% 30%, #c0dd97, #639922);
+  box-shadow: 0 4rpx 14rpx rgba(99,153,34,0.45), inset 0 -4rpx 8rpx rgba(0,0,0,0.18), inset 0 4rpx 8rpx rgba(255,255,255,0.25);
+}
+.bubble.amber .bubble-shine {
+  background: radial-gradient(circle at 30% 30%, #fac775, #ba7517);
+  box-shadow: 0 4rpx 14rpx rgba(186,117,23,0.45), inset 0 -4rpx 8rpx rgba(0,0,0,0.18), inset 0 4rpx 8rpx rgba(255,255,255,0.25);
 }
 
-.bubble.pink .bubble-inner {
-  background: radial-gradient(circle at 35% 35%, #f7c0d1, #d4537e);
-  box-shadow: 0 4rpx 12rpx rgba(212,83,126,0.4), inset 0 -4rpx 8rpx rgba(0,0,0,0.2), inset 0 4rpx 8rpx rgba(255,255,255,0.3);
+/* ===== 戳破瞬间：放大 + 闪光 ===== */
+.bubble.popping {
+  transform: scale(1.4);
+  opacity: 0.6;
+}
+.bubble.popping .bubble-shine {
+  box-shadow: 0 0 24rpx rgba(255,255,255,0.6) !important;
 }
 
-.bubble.purple .bubble-inner {
-  background: radial-gradient(circle at 35% 35%, #cecbf6, #7f77dd);
-  box-shadow: 0 4rpx 12rpx rgba(127,119,221,0.4), inset 0 -4rpx 8rpx rgba(0,0,0,0.2), inset 0 4rpx 8rpx rgba(255,255,255,0.3);
-}
-
-.bubble.blue .bubble-inner {
-  background: radial-gradient(circle at 35% 35%, #b5d4f4, #378add);
-  box-shadow: 0 4rpx 12rpx rgba(55,138,221,0.4), inset 0 -4rpx 8rpx rgba(0,0,0,0.2), inset 0 4rpx 8rpx rgba(255,255,255,0.3);
-}
-
-.bubble.teal .bubble-inner {
-  background: radial-gradient(circle at 35% 35%, #9fe1cb, #1d9e75);
-  box-shadow: 0 4rpx 12rpx rgba(29,158,117,0.4), inset 0 -4rpx 8rpx rgba(0,0,0,0.2), inset 0 4rpx 8rpx rgba(255,255,255,0.3);
-}
-
-.bubble.green .bubble-inner {
-  background: radial-gradient(circle at 35% 35%, #c0dd97, #639922);
-  box-shadow: 0 4rpx 12rpx rgba(99,153,34,0.4), inset 0 -4rpx 8rpx rgba(0,0,0,0.2), inset 0 4rpx 8rpx rgba(255,255,255,0.3);
-}
-
-.bubble.amber .bubble-inner {
-  background: radial-gradient(circle at 35% 35%, #fac775, #ba7517);
-  box-shadow: 0 4rpx 12rpx rgba(186,117,23,0.4), inset 0 -4rpx 8rpx rgba(0,0,0,0.2), inset 0 4rpx 8rpx rgba(255,255,255,0.3);
-}
-
-/* 爆破瞬间动画 */
-.bubble.popping .bubble-inner {
-  transform: scale(1.35);
-  opacity: 0.7;
-  transition: transform 0.08s ease-out, opacity 0.08s ease-out;
-}
-
-/* 已戳破 */
+/* ===== 已戳破：缩小消失 ===== */
 .bubble.popped {
-  transform: scale(0.2) !important;
+  transform: scale(0.15) !important;
   opacity: 0 !important;
   pointer-events: none;
-  transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+  transition: transform 0.25s ease-out, opacity 0.25s ease-out;
 }
 
-/* 爆破闪光 */
-.pop-effect {
+/* ===== 爆破闪光 ===== */
+.pop-flash {
   position: absolute;
-  width: 160%;
-  height: 160%;
-  left: -30%;
-  top: -30%;
+  width: 180%;
+  height: 180%;
+  left: -40%;
+  top: -40%;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,255,255,0.8), rgba(255,255,255,0) 70%);
-  animation: popFlash 0.25s ease-out forwards;
+  background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 70%);
+  animation: flashAnim 0.25s ease-out forwards;
   pointer-events: none;
   z-index: 10;
 }
 
-@keyframes popFlash {
-  0% { transform: scale(0.3); opacity: 1; }
-  100% { transform: scale(1.8); opacity: 0; }
+@keyframes flashAnim {
+  0%   { transform: scale(0.2); opacity: 1; }
+  100% { transform: scale(2.0); opacity: 0; }
 }
 
-/* ===== 粒子效果 ===== */
-.particle {
-  position: absolute;
-  border-radius: 50%;
-  top: 50%;
-  left: 50%;
-  margin-top: -8rpx;
-  margin-left: -8rpx;
-  z-index: 20;
-  pointer-events: none;
-  animation: particleBurst 0.35s ease-out forwards;
-}
-
-/* 粒子颜色 */
-.particle-red { background: #ff8a9e; box-shadow: 0 0 6rpx rgba(233,69,96,0.6); }
-.particle-pink { background: #f7c0d1; box-shadow: 0 0 6rpx rgba(212,83,126,0.6); }
-.particle-purple { background: #cecbf6; box-shadow: 0 0 6rpx rgba(127,119,221,0.6); }
-.particle-blue { background: #b5d4f4; box-shadow: 0 0 6rpx rgba(55,138,221,0.6); }
-.particle-teal { background: #9fe1cb; box-shadow: 0 0 6rpx rgba(29,158,117,0.6); }
-.particle-green { background: #c0dd97; box-shadow: 0 0 6rpx rgba(99,153,34,0.6); }
-.particle-amber { background: #fac775; box-shadow: 0 0 6rpx rgba(186,117,23,0.6); }
-
-@keyframes particleBurst {
-  0% {
-    transform: translate(0, 0) scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(calc(var(--tx) * 1rpx), calc(var(--ty) * 1rpx)) scale(0.3);
-    opacity: 0;
-  }
-}
-
-/* 完成弹窗 */
+/* ===== 完成弹窗 ===== */
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0,0,0,0.7);
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.72);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 100;
 }
-
 .modal {
   background: var(--bg-card);
   border-radius: 32rpx;
   padding: 60rpx 48rpx;
-  width: 560rpx;
+  width: 540rpx;
   text-align: center;
 }
-
 .modal-title {
   font-size: 44rpx;
   font-weight: 500;
@@ -195,14 +158,12 @@
   display: block;
   margin-bottom: 20rpx;
 }
-
 .modal-score {
   font-size: 28rpx;
   color: rgba(255,255,255,0.6);
   display: block;
   margin-bottom: 16rpx;
 }
-
 .modal-record {
   font-size: 32rpx;
   font-weight: 500;
@@ -211,12 +172,10 @@
   margin-bottom: 40rpx;
   animation: pulse 0.8s ease infinite;
 }
-
 @keyframes pulse {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.1); }
 }
-
 .modal-btn {
   background: var(--primary);
   color: #fff;
@@ -226,11 +185,7 @@
   text-align: center;
   margin-bottom: 20rpx;
 }
-
-.modal-btn:active {
-  opacity: 0.8;
-}
-
+.modal-btn:active { opacity: 0.8; }
 .modal-btn-back {
   background: transparent;
   border: 1rpx solid rgba(255,255,255,0.2);

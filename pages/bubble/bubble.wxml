@@ -16,31 +16,26 @@
   </view>
 
   <!-- 泡泡网格（支持滑动连续戳） -->
-  <view class="bubble-grid" catchtouchmove="onGridTouchMove">
-    <block wx:for="{{bubbles}}" wx:key="id">
-      <view
-        class="bubble {{item.popped ? 'popped' : ''}} {{item.color}}"
-        data-id="{{item.id}}"
-        bindtouchstart="onBubbleTap"
-      >
-        <view class="bubble-inner"></view>
-
-        <!-- 爆破闪光 -->
-        <view class="pop-effect" wx:if="{{item.popping}}"></view>
-
-        <!-- 粒子效果 -->
-        <block wx:if="{{item.popping && item.particles.length > 0}}">
-          <view
-            wx:for="{{item.particles}}"
-            wx:for-item="p"
-            wx:key="id"
-            class="particle particle-{{item.color}}"
-            style="--tx:{{p.tx}};--ty:{{p.ty}};width:{{p.size}}rpx;height:{{p.size}}rpx;"
-          ></view>
-        </block>
-      </view>
-    </block>
-  </view>
+  <scroll-view
+    class="bubble-scroll"
+    catchtouchmove="onGridTouchMove"
+    bindtouchend="onTouchEnd"
+    scroll-y
+  >
+    <view class="bubble-grid">
+      <block wx:for="{{bubbles}}" wx:key="id">
+        <view
+          class="bubble {{item.popped ? 'popped' : ''}} {{item.popping ? 'popping' : ''}} {{item.color}}"
+          data-id="{{item.id}}"
+          bindtouchstart="onBubbleTap"
+        >
+          <view class="bubble-shine"></view>
+          <!-- 爆破闪光 -->
+          <view class="pop-flash" wx:if="{{item.popping}}"></view>
+        </view>
+      </block>
+    </view>
+  </scroll-view>
 
   <!-- 完成弹窗 -->
   <view class="modal-overlay" wx:if="{{showComplete}}">
