@@ -5,24 +5,54 @@ Page({
     remainingCount: 0,
     highScore: 0,
     showComplete: false,
-    isNewRecord: false
+    isNewRecord: false,
+    soundOn: true
   },
 
-  colors: ['red', 'pink', 'purple', 'blue', 'teal', 'green', 'amber'],
-  bubbleMap: {},       // id -> {row, col, color}
+  colors: [],  // 不再需要颜色
+  bubbleMap: {},
   gridLeft: 0,
   gridTop: 0,
-  bubbleSize: 0,       // 单个泡泡尺寸(px)，用于位置推算
+  bubbleSize: 0,
   cols: 6,
-  lastPopId: -1,       // 防止同一泡泡在滑动时被重复触发
+  lastPopId: -1,
   vibrateTimer: null,
+  popAudio: null,
 
   onLoad() {
     this.highScore = wx.getStorageSync('bubbleHighScore') || 0
+    this.initAudio()
   },
 
   onReady() {
     this.initGame()
+  },
+
+  onUnload() {
+    if (this.popAudio) {
+      this.popAudio.destroy()
+    }
+  },
+
+  // 初始化音效
+  initAudio() {
+    this.popAudio = wx.createInnerAudioContext()
+    this.popAudio.src = '/pages/bubble/audio/pop.wav'
+    this.popAudio.obeyMuteSwitch = false
+  },
+
+  // 播放戳破音效
+  playPopSound() {
+    if (!this.data.soundOn || !this.popAudio) return
+    this.popAudio.stop()
+    this.popAudio.seek(0)
+    this.popAudio.play()
+  },
+
+  // 切换音效
+  toggleSound() {
+    const soundOn = !this.data.soundOn
+    this.setData({ soundOn })
   },
 
   initGame() {
@@ -34,14 +64,11 @@ Page({
 
     for (let r = 0; r < rows; r++) {
       for (let c = 0; c < cols; c++) {
-        const color = this.colors[Math.floor(Math.random() * this.colors.length)]
         bubbles.push({
           id: id,
-          popped: false,
-          popping: false,
-          color: color
+          popped: false
         })
-        this.bubbleMap[id] = { row: r, col: c, color: color }
+        this.bubbleMap[id] = { row: r, col: c }
         id++
       }
     }
@@ -57,15 +84,14 @@ Page({
       isNewRecord: false
     })
 
-    // onReady 后延迟一帧再查询 DOM 位置
     setTimeout(() => this.cachePositions(), 200)
   },
 
-  // 缓存泡泡网格位置，用于滑动连续戳
+  // 缓存位置
   cachePositions() {
     const query = wx.createSelectorQuery()
-    query.select('.bubble-grid').boundingClientRect()
-    query.selectAll('.bubble').boundingClientRect()
+    query.select('.bubble-sheet').boundingClientRect()
+    query.selectAll('.bubble-cell').boundingClientRect()
     query.exec((res) => {
       if (!res || !res[0]) return
       this.gridLeft = res[0].left || 0
@@ -73,7 +99,7 @@ Page({
 
       if (res[1] && res[1].length > 0) {
         const r = res[1][0]
-        this.bubbleSize = Math.round(r.width || 50)
+        this.bubbleSize = Math.round(r.width || 96)
       }
     })
   },
@@ -83,7 +109,7 @@ Page({
     this.doPop(id)
   },
 
-  // 滑动连续戳：通过触摸坐标直接推算泡泡 id
+  // 滑动连续戳
   onGridTouchMove(e) {
     if (this.bubbleSize === 0) return
     if (!e.touches || !e.touches[0]) return
@@ -94,7 +120,7 @@ Page({
     if (col < 0 || col >= this.cols || row < 0 || row > 11) return
 
     const id = row * this.cols + col
-    if (id === this.lastPopId) return   // 同一泡泡不重复触发
+    if (id === this.lastPopId) return
     this.lastPopId = id
     this.doPop(id)
   },
@@ -105,14 +131,11 @@ Page({
 
   doPop(id) {
     if (id < 0 || id >= this.data.bubbles.length) return
-    const key = 'bubbles[' + id + ']'
     const b = this.data.bubbles[id]
-    if (!b || b.popped || b.popping) return
+    if (!b || b.popped) return
 
-    // 先标记 popping（触发缩放+闪光动画）
-    this.setData({
-      [key + '.popping']: true
-    })
+    // 播放音效
+    this.playPopSound()
 
     // 震动反馈
     if (this.vibrateTimer) {
@@ -123,22 +146,22 @@ Page({
     clearTimeout(this.vibrateTimer)
     this.vibrateTimer = setTimeout(() => { this.vibrateTimer = null }, 60)
 
-    // 150ms 后标记为已戳破
-    setTimeout(() => {
-      const b2 = this.data.bubbles[id]
-      if (!b2) return
-      const poppedCount = this.data.poppedCount + 1
-      const remainingCount = this.data.remainingCount - 1
-      this.setData({
-        ['bubbles[' + id + '].popping']: false,
-        ['bubbles[' + id + '].popped']: true,
-        poppedCount,
-        remainingCount
-      })
-      if (remainingCount === 0) {
+    // 标记戳破
+    const poppedCount = this.data.poppedCount + 1
+    const remainingCount = this.data.remainingCount - 1
+
+    this.setData({
+      ['bubbles[' + id + '].popped']: true,
+      poppedCount,
+      remainingCount
+    })
+
+    // 检查是否完成
+    if (remainingCount === 0) {
+      setTimeout(() => {
         this.onGameComplete(poppedCount)
-      }
-    }, 150)
+      }, 300)
+    }
   },
 
   onGameComplete(score) {
