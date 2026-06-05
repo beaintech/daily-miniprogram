@@ -15,8 +15,8 @@
     </view>
   </view>
 
-  <!-- 泡泡网格 -->
-  <view class="bubble-grid">
+  <!-- 泡泡网格（支持滑动连续戳） -->
+  <view class="bubble-grid" catchtouchmove="onGridTouchMove">
     <block wx:for="{{bubbles}}" wx:key="id">
       <view
         class="bubble {{item.popped ? 'popped' : ''}} {{item.color}}"
@@ -24,7 +24,20 @@
         bindtouchstart="onBubbleTap"
       >
         <view class="bubble-inner"></view>
+
+        <!-- 爆破闪光 -->
         <view class="pop-effect" wx:if="{{item.popping}}"></view>
+
+        <!-- 粒子效果 -->
+        <block wx:if="{{item.popping && item.particles.length > 0}}">
+          <view
+            wx:for="{{item.particles}}"
+            wx:for-item="p"
+            wx:key="id"
+            class="particle particle-{{item.color}}"
+            style="--tx:{{p.tx}};--ty:{{p.ty}};width:{{p.size}}rpx;height:{{p.size}}rpx;"
+          ></view>
+        </block>
       </view>
     </block>
   </view>
