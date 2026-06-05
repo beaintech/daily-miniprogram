@@ -35,9 +35,7 @@
     "uglifyFileName": true,
     "uploadWithSourceMap": true,
     "enhance": false,
-    "lazyCodeLoading": {
-      "components": true
-    },
+    "lazyCodeLoading": "requiredComponents",
     "localPlugins": false,
     "condition": false,
     "swc": false,
